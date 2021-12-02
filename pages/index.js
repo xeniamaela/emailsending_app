@@ -27,10 +27,11 @@ function Index({authAxios}) {
 
   const handleEmailSending = async () => {
     emails.map(e =>
-      e.length != 0 && authAxios.post('/spamEmail', {
+      e.length != null && authAxios.post('/spamEmail', {
         email: e
       })
-      .then(result => {return result})
+      .then(result => console.log(result))
+      .catch(error => console.log(error))
     )
   }
 
