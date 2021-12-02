@@ -4,8 +4,10 @@ import "isomorphic-fetch";
 import createShopifyAuth, { verifyRequest } from "@shopify/koa-shopify-auth";
 import Shopify, { ApiVersion } from "@shopify/shopify-api";
 import Koa from "koa";
+import koaBody from 'koa-body'
 import next from "next";
 import Router from "koa-router";
+import nodemailer from 'nodemailer'
 
 dotenv.config();
 const port = parseInt(process.env.PORT, 10) || 8081;
@@ -71,18 +73,54 @@ app.prepare().then(async () => {
 
   // start
   router.get("/customers", verifyRequest({ returnHeader: true }), async (ctx) => {
+
     const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
     const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
     const data = await client.get({
       path: 'customers',
     });
-    console.log(session);
-    console.log(data.body.customers);
+    // console.log(session);
+    // console.log(data.body.customers);
 
     ctx.status = 200;
     ctx.body = data;
   });
   // end
+
+  //start
+  router.post('/spamEmail', koaBody(), async (ctx) => {
+    const data = ctx.request.body
+    const email = data.email
+    console.log(data)
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: 'tildeshop2021@gmail.com',
+          pass: 'tildestore_2021$'
+      }
+    });
+
+    let message = {
+      from: 'Muziqa <muziqashop2021@gmail.com>',
+      to: email,
+      subject: "Welcome to Muziqa" ,
+      html: `
+      <div style="text-align: center; justify-content: center;">
+      <h1>Hello! This is a spam mail</h1>
+      </div>`
+    }
+
+    transporter.sendMail(message, (err, data)=> {
+      if (err) {
+          console.log("error in sending email", err)
+      } else {
+          console.log("success", data)
+          ctx.status = 200;
+          ctx.body = data;
+      } 
+    });
+  })
+  //end
 
   router.post("/webhooks", async (ctx) => {
     try {
