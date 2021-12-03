@@ -1,10 +1,9 @@
-import { Card, Button, Page, DataTable, List } from "@shopify/polaris";
+import { Card, Button, Page, DataTable, List, Layout } from "@shopify/polaris";
 import React, {useState, useEffect} from 'react'
 
 function Index({authAxios}) {
   
   const [customers, setCustomers] = useState([])
-  // const [customerEmail, setCustomerEmail] = useState([])
 
   useEffect(() => {
     authAxios.get('/customers')
@@ -15,14 +14,11 @@ function Index({authAxios}) {
     .catch(error => { console.log(error)})
   }, [])
 
-  let id =customers.map(customer => {
-    return(customer.id)
+  const row = customers.map(customer => {
+    return [customer.id, customer.first_name, customer.last_name, customer.email]
   })
-  let firstName =customers.map(customer => {return(customer.first_name)})
-  let lastName =customers.map(customer => {return(customer.last_name)})
-  // let lastName = lastNames.map(lm => {return lm})
+
   let emails = customers.map(customer => {return(customer.email)})
-  // let email = emails.map(e => {return e})
 
 
   const handleEmailSending = async () => {
@@ -40,40 +36,15 @@ function Index({authAxios}) {
       <Page
         title='List of all customers'
       >
-        <Button
-        primary
-        onClick={handleEmailSending}
-        >Send Spam Email</Button>
+        <Button primary onClick={handleEmailSending}>Send Spam Email</Button>
         <Card>
-        <DataTable
-          columnContentTypes={[
-            'numeric',
-            'text',
-            'text',
-            'text',
-          ]}
-          headings={[
-
-          ]}
-          rows={[
-            id,
-            firstName,
-            lastName,
-            emails
-          ]}
-        />
+          <DataTable
+            columnContentTypes={['text', 'text', 'text', 'text',]}
+            headings={['Customer ID','First Name','Last Name','Email']}
+            rows={row}
+          />
         </Card>
       </Page>
   )
 }
 export default Index;
-
-
-    // <div>
-      // <Button>Button</Button>
-      // <div>
-      // {customers.map(customer => {
-      // <h1 key={customer.id}>{customer.first_name}</h1>
-      // })}
-      // </div>
-    // </div>
