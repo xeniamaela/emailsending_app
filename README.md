@@ -1,3 +1,5 @@
+This is a Shopify Node App that sends email to customers using Nodemailer.
+
 # Shopify App Node
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
