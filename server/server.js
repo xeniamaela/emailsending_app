@@ -80,6 +80,7 @@ app.prepare().then(async () => {
       path: 'customers',
     });
     // console.log(session);
+    console.log(data)
     // console.log(data.body.customers);
 
     ctx.status = 200;
