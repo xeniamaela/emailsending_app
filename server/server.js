@@ -117,7 +117,7 @@ app.prepare().then(async () => {
       html: `
       <div style="text-align: center; justify-content: center;">
       <h1>Hello! This is a spam mail</h1>
-      <p>Buy our best seller ${customMessage}</p>
+      <p>Buy our best seller ${customMessage}.</p>
       </div>`
     }
 

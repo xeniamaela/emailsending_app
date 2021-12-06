@@ -6,10 +6,6 @@ function Index({authAxios}) {
   const [customers, setCustomers] = useState([])
   const [orders, setOrders] = useState([])
 
-  // console.log(orders)
-  let trackObj = {}
-  let maxCount = 0, maxElement;
-
 
   useEffect(() => {
     authAxios.get('/orders')
@@ -22,29 +18,31 @@ function Index({authAxios}) {
 
 
   const orderList = orders.map(order => {
-    console.log(order.line_items[0].name)
     return(order.line_items[0].name)
   })
 
-  orderList.forEach(cur => {
-    (!trackObj[cur]) ? trackObj[cur] = 1 : trackObj[cur]++;
+  let trackObj = []
+  let maxCount = 0, maxElement;
 
-    if(trackObj[cur] > maxCount) {
-      maxCount = trackObj[cur]
-      maxElement=cur
+  orderList.forEach(order => {
+
+    (!trackObj[order]) ? trackObj[order] = 1 : trackObj[order]++;
+
+    if(trackObj[order] > maxCount) {
+      maxCount = trackObj[order]
+      maxElement=order
     }
   });
 
-  console.log(trackObj)
+  let bestSellingOrders = Object.entries(trackObj).slice(0,2)
+  let bestSelling = bestSellingOrders.map(a => {return(a[0])})
+  console.log(bestSelling)
   console.log(maxElement, maxCount)
-
-
 
 
   useEffect(() => {
     authAxios.get('/customers')
     .then(result => {
-      // console.log(result)
       setCustomers(result.data.body.customers)
     })
     .catch(error => { console.log(error)})
@@ -61,7 +59,7 @@ function Index({authAxios}) {
     emails.map(e =>
       e != null && authAxios.post('/spamEmail', {
         email: e,
-        customMessage: maxElement
+        customMessage: bestSelling
       })
       .then(result => console.log(result))
       .catch(error => console.log(error))
