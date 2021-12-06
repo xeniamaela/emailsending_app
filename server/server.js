@@ -71,6 +71,17 @@ app.prepare().then(async () => {
     ctx.res.statusCode = 200;
   };
 
+  router.get("/orders", verifyRequest({returnHeader: true}), async(ctx) => {
+    const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
+    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+    const data = await client.get({
+      path: 'orders',
+    });
+    // console.log(data)
+
+    ctx.status = 200;
+    ctx.body = data;
+  })
   // start
   router.get("/customers", verifyRequest({ returnHeader: true }), async (ctx) => {
 
@@ -79,9 +90,6 @@ app.prepare().then(async () => {
     const data = await client.get({
       path: 'customers',
     });
-    // console.log(session);
-    console.log(data)
-    // console.log(data.body.customers);
 
     ctx.status = 200;
     ctx.body = data;
@@ -92,7 +100,8 @@ app.prepare().then(async () => {
   router.post('/spamEmail', koaBody(), async (ctx) => {
     const data = ctx.request.body
     const email = data.email
-    console.log(data)
+    const customMessage = data.customMessage
+    // console.log(data)
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -108,6 +117,7 @@ app.prepare().then(async () => {
       html: `
       <div style="text-align: center; justify-content: center;">
       <h1>Hello! This is a spam mail</h1>
+      <p>Buy our best seller ${customMessage}</p>
       </div>`
     }
 

@@ -1,14 +1,50 @@
-import { Card, Button, Page, DataTable, List, Layout } from "@shopify/polaris";
+import { Card, Button, Page, DataTable } from "@shopify/polaris";
 import React, {useState, useEffect} from 'react'
 
 function Index({authAxios}) {
   
   const [customers, setCustomers] = useState([])
+  const [orders, setOrders] = useState([])
+
+  // console.log(orders)
+  let trackObj = {}
+  let maxCount = 0, maxElement;
+
+
+  useEffect(() => {
+    authAxios.get('/orders')
+    .then(result => {
+      // console.log('orders',(result.data.body.orders))
+      setOrders(result.data.body.orders)
+    })
+    .catch(error => { console.log(error)})
+  }, [])
+
+
+  const orderList = orders.map(order => {
+    console.log(order.line_items[0].name)
+    return(order.line_items[0].name)
+  })
+
+  orderList.forEach(cur => {
+    (!trackObj[cur]) ? trackObj[cur] = 1 : trackObj[cur]++;
+
+    if(trackObj[cur] > maxCount) {
+      maxCount = trackObj[cur]
+      maxElement=cur
+    }
+  });
+
+  console.log(trackObj)
+  console.log(maxElement, maxCount)
+
+
+
 
   useEffect(() => {
     authAxios.get('/customers')
     .then(result => {
-      console.log(result)
+      // console.log(result)
       setCustomers(result.data.body.customers)
     })
     .catch(error => { console.log(error)})
@@ -24,7 +60,8 @@ function Index({authAxios}) {
   const handleEmailSending = async () => {
     emails.map(e =>
       e != null && authAxios.post('/spamEmail', {
-        email: e
+        email: e,
+        customMessage: maxElement
       })
       .then(result => console.log(result))
       .catch(error => console.log(error))
