@@ -17,9 +17,7 @@ function Index({authAxios}) {
   }, [])
 
 
-  const orderList = orders.map(order => {
-    return(order.line_items[0].name)
-  })
+  const orderList = orders.map(order => {return(order.line_items[0].name)})
 
   let trackObj = []
   let maxCount = 0, maxElement;
@@ -36,6 +34,7 @@ function Index({authAxios}) {
 
   let bestSellingOrders = Object.entries(trackObj).slice(0,2)
   let bestSelling = bestSellingOrders.map(a => {return(a[0])})
+  console.log(trackObj)
   console.log(bestSelling)
   console.log(maxElement, maxCount)
 
@@ -49,11 +48,19 @@ function Index({authAxios}) {
   }, [])
 
   const row = customers.map(customer => {
-    return [customer.id, customer.first_name, customer.last_name, customer.email]
+    return [customer.id, customer.first_name, customer.last_name, customer.email, <Button primary onClick={specificEmailSending}>Send</Button>]
   })
 
   let emails = customers.map(customer => {return(customer.email)})
-
+  console.log(emails)
+  const specificEmailSending = async () => {
+    authAxios.post('/spamEmail', {
+      email: emails,
+      customMessage: bestSelling
+    })
+    .then(result => console.log(result))
+    .catch(error => console.log(error))
+  }
 
   const handleEmailSending = async () => {
     emails.map(e =>
@@ -73,12 +80,12 @@ function Index({authAxios}) {
       >
         <Card>
           <Card.Section> 
-            <Button fill primary onClick={handleEmailSending}>Send Spam Email</Button>
+            <Button primary onClick={handleEmailSending}>Send to all</Button>
           </Card.Section>
           <Card.Section>
             <DataTable
               columnContentTypes={['text', 'text', 'text', 'text',]}
-              headings={['Customer ID','First Name','Last Name','Email']}
+              headings={['Customer ID','First Name','Last Name','Email', '']}
               rows={row}
             />
           </Card.Section>

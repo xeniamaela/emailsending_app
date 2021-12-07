@@ -116,8 +116,8 @@ app.prepare().then(async () => {
       subject: "Welcome to Muziqa" ,
       html: `
       <div style="text-align: center; justify-content: center;">
-      <h1>Hello! This is a spam mail</h1>
-      <p>Buy our best seller ${customMessage}.</p>
+      <h1>This Christmas gift your loved ones with our best seller items.</h1>
+      <h2>${customMessage}.</h2>
       </div>`
     }
 
