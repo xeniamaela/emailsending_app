@@ -1,4 +1,4 @@
-import { Card, Button, Page, DataTable } from "@shopify/polaris";
+import { Card, Button, Page, DataTable, ResourceList } from "@shopify/polaris";
 import React, {useState, useEffect} from 'react'
 
 function Index({authAxios}) {
@@ -17,26 +17,27 @@ function Index({authAxios}) {
   }, [])
 
 
-  const orderList = orders.map(order => {return(order.line_items[0].name)})
+  let orderList =[]
+  orders.map(order => {
+    order.line_items.map((item) => orderList.push(item.name))
+  })
 
-  let trackObj = []
-  let maxCount = 0, maxElement;
 
-  orderList.forEach(order => {
+    let hash = {}
+    let bestSelling = []
+    let k = 3
 
-    (!trackObj[order]) ? trackObj[order] = 1 : trackObj[order]++;
-
-    if(trackObj[order] > maxCount) {
-      maxCount = trackObj[order]
-      maxElement=order
+    for (let cur of orderList) {
+      if (!hash[cur]) hash[cur] = 0
+      hash[cur]++
     }
-  });
 
-  let bestSellingOrders = Object.entries(trackObj).slice(0,2)
-  let bestSelling = bestSellingOrders.map(a => {return(a[0])})
-  console.log(trackObj)
-  console.log(bestSelling)
-  console.log(maxElement, maxCount)
+    const hashToArray = Object.entries(hash)
+    const sortedArray = hashToArray.sort((a,b) => b[1] - a[1])
+    const sortedElements = sortedArray.map(num =>num[0])
+    let final = sortedElements.slice(0, k)
+    bestSelling.push(final)
+    console.log(bestSelling)
 
 
   useEffect(() => {
@@ -48,14 +49,17 @@ function Index({authAxios}) {
   }, [])
 
   const row = customers.map(customer => {
-    return [customer.id, customer.first_name, customer.last_name, customer.email, <Button primary onClick={specificEmailSending}>Send</Button>]
+    return [customer.id, customer.first_name, customer.last_name, customer.email,
+    <Button primary id={customer.email} onClick={()=> handleSpecificEmail(customer.email)}>Send</Button>]
   })
 
-  let emails = customers.map(customer => {return(customer.email)})
-  console.log(emails)
-  const specificEmailSending = async () => {
+  const email = row.map(e => {return(e[3])})
+
+  const handleSpecificEmail = async (customerEmail) => {
+    alert('Email sent!')
+    console.log(customerEmail)
     authAxios.post('/spamEmail', {
-      email: emails,
+      email: customerEmail,
       customMessage: bestSelling
     })
     .then(result => console.log(result))
@@ -63,24 +67,25 @@ function Index({authAxios}) {
   }
 
   const handleEmailSending = async () => {
-    emails.map(e =>
-      e != null && authAxios.post('/spamEmail', {
-        email: e,
-        customMessage: bestSelling
-      })
-      .then(result => console.log(result))
-      .catch(error => console.log(error))
-    )
+    alert('Email sent to all!')
+    authAxios.post('/spamEmail', {
+      email: email,
+      customMessage: bestSelling
+    })
+    .then(result => console.log(result))
+    .catch(error => console.log(error))
   }
 
   return (
 
       <Page
-        title='List of all customers'
+        title='BEST SELLER EMAIL SENDER'
       >
         <Card>
           <Card.Section> 
-            <Button primary onClick={handleEmailSending}>Send to all</Button>
+            <div style={{color: '#008060'}}>
+              <Button monochrome outline fullWidth size="large" right onClick={handleEmailSending}>Send to all</Button>
+            </div>
           </Card.Section>
           <Card.Section>
             <DataTable

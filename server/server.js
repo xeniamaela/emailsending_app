@@ -101,7 +101,6 @@ app.prepare().then(async () => {
     const data = ctx.request.body
     const email = data.email
     const customMessage = data.customMessage
-    // console.log(data)
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -116,8 +115,9 @@ app.prepare().then(async () => {
       subject: "Welcome to Muziqa" ,
       html: `
       <div style="text-align: center; justify-content: center;">
-      <h1>This Christmas gift your loved ones with our best seller items.</h1>
-      <h2>${customMessage}.</h2>
+      <h1>Our best seller is on sale!</h1>
+      <h2>${customMessage}</h2>
+      <h3><a href="https://muziqa.myshopify.com/">SHOP NOW</a></h3>
       </div>`
     }
 
