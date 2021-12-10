@@ -77,7 +77,6 @@ function Index({authAxios}) {
   }
 
   return (
-
       <Page
         title='BEST SELLER EMAIL SENDER'
       >
