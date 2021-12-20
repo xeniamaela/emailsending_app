@@ -2,12 +2,13 @@ import "@babel/polyfill";
 import dotenv from "dotenv";
 import "isomorphic-fetch";
 import createShopifyAuth, { verifyRequest } from "@shopify/koa-shopify-auth";
-import Shopify, { ApiVersion } from "@shopify/shopify-api";
+import Shopify, { ApiVersion, DataType } from "@shopify/shopify-api";
 import Koa from "koa";
 import koaBody from 'koa-body'
 import next from "next";
 import Router from "koa-router";
 import nodemailer from 'nodemailer'
+import * as handlers from "./handlers/index";
 
 dotenv.config();
 const port = parseInt(process.env.PORT, 10) || 8081;
@@ -20,7 +21,7 @@ const handle = app.getRequestHandler();
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
-  SCOPES: process.env.SCOPES,
+  SCOPES: process.env.SCOPES.split(','),
   HOST_NAME: process.env.HOST.replace(/https:\/\/|\/$/g, ""),
   API_VERSION: ApiVersion.October20,
   IS_EMBEDDED_APP: true,
@@ -71,32 +72,40 @@ app.prepare().then(async () => {
     ctx.res.statusCode = 200;
   };
 
-  router.get("/orders", verifyRequest({returnHeader: true}), async(ctx) => {
-    const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
-    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
-    const data = await client.get({
-      path: 'orders',
-    });
-    // console.log(data)
-
-    ctx.status = 200;
-    ctx.body = data;
-  })
   // start
-  router.get("/customers", verifyRequest({ returnHeader: true }), async (ctx) => {
-
+  router.get("/customers", verifyRequest({returnHeader: true}), async(ctx) => {
+    let customers = [];
     const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
     const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
     const data = await client.get({
       path: 'customers',
+      query: {limit:250} 
     });
 
-    ctx.status = 200;
-    ctx.body = data;
-  });
-  // end
 
-  //start
+    let newPageInfo;
+    customers = [...data.body.customers]
+    
+    newPageInfo = data.pageInfo.nextPage.query.page_info;
+    console.log(newPageInfo);
+      
+    while(newPageInfo) {
+
+        const nextPage = await client.get({
+          path: 'customers',
+          query: {page_info: newPageInfo, limit:250}
+        })
+        customers = [...customers, ...nextPage.body.customers]
+        // console.log(nextPage.pageInfo.nextPage.query.page_info)
+
+        newPageInfo = nextPage.pageInfo.nextPage !== undefined && nextPage.pageInfo.nextPage.query.page_info
+    }
+
+    console.log(customers)
+    ctx.status = 200;
+    ctx.body = customers;
+  })
+  
   router.post('/spamEmail', koaBody(), async (ctx) => {
     const data = ctx.request.body
     const email = data.email
@@ -131,6 +140,49 @@ app.prepare().then(async () => {
       } 
     });
   })
+
+  router.get("/orders", verifyRequest({returnHeader: true}), async(ctx) => {
+    const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
+    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+    const data = await client.get({
+      path: 'orders',
+    });
+
+    ctx.status = 200;
+    ctx.body = data;
+  })
+
+  router.post('/subscription-basic', verifyRequest(), koaBody(), async(ctx) => {
+    
+    const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
+    server.context.client = await handlers.createClient(session.shop, session.accessToken);
+    const res = JSON.stringify(await handlers.getSubscriptionBasic(ctx, session.shop));
+
+    ctx.status = 200;
+    ctx.body = res;
+  })
+
+  router.post('/subscription-pro', verifyRequest(), koaBody(), async(ctx) => {
+    
+    const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
+    server.context.client = await handlers.createClient(session.shop, session.accessToken);
+    const res = JSON.stringify(await handlers.getSubscriptionPro(ctx, session.shop));
+
+    ctx.status = 200;
+    ctx.body = res;
+  })
+
+  router.get('/getAllSubscription', verifyRequest(), async(ctx) => {
+    const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
+    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+    const data = await client.get({
+      path: 'recurring_application_charges',
+    });
+
+    ctx.status = 200;
+    ctx.body = data;
+  })
+
   //end
 
   router.post("/webhooks", async (ctx) => {

@@ -5,22 +5,15 @@ export function RECURRING_CREATE(url) {
   return gql`
     mutation {
       appSubscriptionCreate(
-          name: "Super Duper Plan"
+          name: "BASIC PLAN"
           returnUrl: "${url}"
           test: true
           lineItems: [
           {
             plan: {
-              appUsagePricingDetails: {
-                  cappedAmount: { amount: 10, currencyCode: USD }
-                  terms: "$1 for 1000 emails"
-              }
-            }
-          }
-          {
-            plan: {
               appRecurringPricingDetails: {
-                  price: { amount: 10, currencyCode: USD }
+                  price: { amount: 5, currencyCode: USD }
+                  interval: EVERY_30_DAYS
               }
             }
           }
@@ -38,13 +31,15 @@ export function RECURRING_CREATE(url) {
     }`;
 }
 
-export const getSubscriptionUrl = async ctx => {
+export const getSubscriptionBasic = async (ctx, shop) => {
   const { client } = ctx;
+  // console.log(client)
   const confirmationUrl = await client
     .mutate({
-      mutation: RECURRING_CREATE(process.env.HOST)
+      mutation: RECURRING_CREATE(`${process.env.HOST}/auth?shop=${shop}`)
     })
     .then(response => response.data.appSubscriptionCreate.confirmationUrl);
 
-  return ctx.redirect(confirmationUrl);
+  console.log(confirmationUrl)
+  return confirmationUrl;
 };
