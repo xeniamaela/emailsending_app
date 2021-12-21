@@ -183,9 +183,9 @@ app.prepare().then(async () => {
     ctx.body = data;
   })
 
-  router.get('/cancelSubscription', koaBody(), verifyRequest(), async(ctx) => {
-    const data = ctx.request.body
-    const id = data.id
+  router.delete('/cancelSubscription', koaBody(), verifyRequest(), async(ctx) => {
+    const requestBody = ctx.request.body
+    const id = requestBody.id
     const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
     const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
     const data = await client.delete({
