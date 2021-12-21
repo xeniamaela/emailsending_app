@@ -98,12 +98,13 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleCancelSubscription = async () => {
+    console.log('am clicked!')
       authAxios.delete('/cancelSubscription', {
         id: subscription[0].id
       })
       .then(res => {
         window.parent.location.href = res.data;
-        console.log('am clicked!')
+        
       })
   }
 
@@ -114,7 +115,7 @@ const emailsending = ({authAxios}) => {
         primaryAction={
           {
             content: 'Cancel Subscription',
-            onMouseEnter: () => handleCancelSubscription
+            onAction: () => {handleCancelSubscription}
           }
         }
         >
