@@ -70,7 +70,7 @@ const emailsending = ({authAxios}) => {
       email: customerEmail,
       customMessage: bestSelling
     })
-    .then(result => {console.log(result); setBtnDisable(false);})
+    .then(result => {console.log(result); })
     .catch(error => console.log(error))
 
     alert('Email sent to customer!')
@@ -81,24 +81,24 @@ const emailsending = ({authAxios}) => {
       email: email,
       customMessage: bestSelling
     })
-    .then(result => {console.log(result); setBtnDisable(true);})
+    .then(result => {console.log(result); })
     .catch(error => console.log(error))
 
     alert('Email sent to all!')
   }
 
   const handleSubscriptionChoices = async () => {
-    alert('clicked!')
+    window.parent.location.href = subscriptionChoices
   }
 
   const handleBasicPlan = async () => {
       authAxios.post('/subscription-basic')
-      .then(res => {window.location.href = res.data;})
+      .then(res => {window.location.href = res.data; setBtnDisable(true);})
   }
 
   const handleProPlan = async () => {
       authAxios.post('/subscription-pro')
-      .then(res => {window.parent.location.href = res.data;})
+      .then(res => {window.parent.location.href = res.data; setBtnDisable(false);})
   }
 
     const subscriptionChoices = (
