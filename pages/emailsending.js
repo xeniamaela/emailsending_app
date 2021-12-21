@@ -23,6 +23,7 @@ const emailsending = ({authAxios}) => {
     authAxios.get('/getAllSubscription')
     .then(result => {const subscription = result.data.body.recurring_application_charges; const length = result.data.body.recurring_application_charges.length;
       console.log(subscription)
+      console.log(subscription[0].id)
       for(let i = 0; i < length; i++) {
         if (subscription[i].status !== 'active') {
           continue;
@@ -97,7 +98,9 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleCancelSubscription = async () => {
-      authAxios.delete('/cancelSubscription')
+      authAxios.delete('/cancelSubscription', {
+        id: subscription[0].id
+      })
       .then(res => {
         window.parent.location.href = res.data;
       })
