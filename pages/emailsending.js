@@ -122,7 +122,7 @@ const emailsending = ({authAxios}) => {
                 </div>
                 <br/>
                 <div style={{color: '#008060'}}>
-                <Button monochrome outline fullWidth size="large" onClick={handleCancelSubscription}>Cancel</Button>
+                <Button monochrome outline fullWidth size="large" onClick={handleCancelSubscription}>SUBSCRIPTION</Button>
                 </div>
             </Card.Section>
             <Card.Section>

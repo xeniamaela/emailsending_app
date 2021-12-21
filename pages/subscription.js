@@ -47,6 +47,11 @@ const Subscription = ({authAxios}) => {
         subtitle="Find a plan that best matches the scale you need for your application."
         divider
         >
+            <Card title="FREE PLAN">
+                <Card.Section>
+                    <Button primary onClick={handleBasicPlan}>Subscribe</Button>
+                </Card.Section>
+            </Card>
             <Card title="BASIC PLAN">
                 <Card.Section>
                     <Button primary onClick={handleBasicPlan}>Subscribe</Button>
