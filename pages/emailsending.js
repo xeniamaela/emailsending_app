@@ -88,12 +88,12 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleSubscriptionChoices = async () => {
-    subscriptionChoices
+    return subscriptionChoices
   }
 
   const handleBasicPlan = async () => {
       authAxios.post('/subscription-basic')
-      .then(res => {window.location.href = res.data; setBtnDisable(true);})
+      .then(res => {window.parent.location.href = res.data; setBtnDisable(true);})
   }
 
   const handleProPlan = async () => {
