@@ -183,11 +183,13 @@ app.prepare().then(async () => {
     ctx.body = data;
   })
 
-  router.get('/cancelSubscription', verifyRequest(), async(ctx) => {
+  router.get('/cancelSubscription', koaBody(), verifyRequest(), async(ctx) => {
+    const data = ctx.request.body
+    const id = data.id
     const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
     const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
     const data = await client.delete({
-      path: 'recurring_application_charges',
+      path: `recurring_application_charges/${id}`,
     });
 
     ctx.status = 200;
