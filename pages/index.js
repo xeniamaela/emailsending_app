@@ -4,6 +4,7 @@ import Subscription from "./subscription";
 
 const Index = ({authAxios}) => {
 
+  
   return (
         // <EmailSending authAxios={authAxios}/>
         <Subscription authAxios={authAxios}/>

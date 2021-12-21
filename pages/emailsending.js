@@ -65,52 +65,67 @@ const emailsending = ({authAxios}) => {
   const email = row.map(e => {return(e[3])})
 
   const handleSpecificEmail = async (customerEmail) => {
-    // alert('Email sent!')
-    // console.log(customerEmail)
 
-    subscription[0].name === 'BASIC PLAN' ? authAxios.post('/subscription-pro')
-    .then(res => {
-      window.parent.location.href = res.data;
-      setBtnDisable(false);
-    }) :
     authAxios.post('/spamEmail', {
       email: customerEmail,
       customMessage: bestSelling
     })
-    .then(result => console.log(result))
+    .then(result => {console.log(result); setBtnDisable(false);})
     .catch(error => console.log(error))
 
     alert('Email sent to customer!')
   }
 
   const handleEmailSending = async () => {
-    subscription === null ? authAxios.post('/subscription-basic')
-    .then(res => {
-      window.parent.location.href = res.data;
-      setBtnDisable(true);
-    }) :
     authAxios.post('/spamEmail', {
       email: email,
       customMessage: bestSelling
     })
-    .then(result => console.log(result))
+    .then(result => {console.log(result); setBtnDisable(true);})
     .catch(error => console.log(error))
 
     alert('Email sent to all!')
   }
 
-  const handleCancelSubscription = async () => {
-
-      authAxios.delete('/cancelSubscription', {
-        id: subscriptionId
-      })
-      .then(res => {
-        window.parent.location.href = res.data;
-        alert('am clicked!')
-      })
+  const handleSubscriptionChoices = async () => {
+    alert('clicked!')
   }
 
-    return (
+  const handleBasicPlan = async () => {
+      authAxios.post('/subscription-basic')
+      .then(res => {window.location.href = res.data;})
+  }
+
+  const handleProPlan = async () => {
+      authAxios.post('/subscription-pro')
+      .then(res => {window.parent.location.href = res.data;})
+  }
+
+    const subscriptionChoices = (
+        <Page
+        title="Choose the Right Plan For You"
+        subtitle="Find a plan that best matches the scale you need for your application."
+        divider
+        >
+            <Card title="FREE PLAN">
+                <Card.Section>
+                    <Button primary onClick={handleSubscriptionChoices}>Subscribe</Button>
+                </Card.Section>
+            </Card>
+            <Card title="BASIC PLAN">
+                <Card.Section>
+                    <Button primary onClick={handleBasicPlan}>Subscribe</Button>
+                </Card.Section>
+            </Card>
+            <Card title="PRO PLAN">
+                <Card.Section>
+                    <Button primary onClick={handleProPlan}>Subscribe</Button>
+                </Card.Section>
+            </Card>
+        </Page>
+    )
+
+    return subscription !== null ? (
         <Page
         title='BEST SELLER EMAIL SENDER'
         subtitle={subscription}
@@ -122,7 +137,7 @@ const emailsending = ({authAxios}) => {
                 </div>
                 <br/>
                 <div style={{color: '#008060'}}>
-                <Button monochrome outline fullWidth size="large" onClick={handleCancelSubscription}>SUBSCRIPTION</Button>
+                <Button monochrome outline fullWidth size="large" onClick={handleSubscriptionChoices}>SUBSCRIPTION</Button>
                 </div>
             </Card.Section>
             <Card.Section>
@@ -134,7 +149,7 @@ const emailsending = ({authAxios}) => {
             </Card.Section>
             </Card>
         </Page>
-    )
+    ) : subscriptionChoices
 }
 
 export default emailsending;

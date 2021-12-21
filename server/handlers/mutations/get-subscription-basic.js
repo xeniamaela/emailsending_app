@@ -1,12 +1,12 @@
 import "isomorphic-fetch";
 import { gql } from "apollo-boost";
 
-export function RECURRING_CREATE(shop) {
+export function RECURRING_CREATE(url) {
   return gql`
     mutation {
       appSubscriptionCreate(
           name: "BASIC PLAN"
-          returnUrl: "${shop}"
+          returnUrl: "${url}"
           test: true
           lineItems: [
           {
