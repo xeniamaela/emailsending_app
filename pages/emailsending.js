@@ -103,6 +103,7 @@ const emailsending = ({authAxios}) => {
       })
       .then(res => {
         window.parent.location.href = res.data;
+        console.log('am clicked!')
       })
   }
 
@@ -113,7 +114,7 @@ const emailsending = ({authAxios}) => {
         primaryAction={
           {
             content: 'Cancel Subscription',
-            onAction: () => handleCancelSubscription
+            onMouseEnter: () => handleCancelSubscription
           }
         }
         >
