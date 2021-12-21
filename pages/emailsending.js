@@ -115,7 +115,7 @@ const emailsending = ({authAxios}) => {
         primaryAction={
           {
             content: 'Cancel Subscription',
-            onAction: () => {handleCancelSubscription}
+            onAction: {handleCancelSubscription}
           }
         }
         >
