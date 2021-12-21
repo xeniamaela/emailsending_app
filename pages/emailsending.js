@@ -88,7 +88,7 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleSubscriptionChoices = async () => {
-    window.parent.location.href = subscriptionChoices
+    subscriptionChoices
   }
 
   const handleBasicPlan = async () => {
