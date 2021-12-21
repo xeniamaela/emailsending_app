@@ -90,7 +90,7 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleSubscriptionChoices = async () => {
-    subscriptionChoices
+    return subscriptionChoices
   }
 
   const handleBasicPlan = async () => {
@@ -127,7 +127,7 @@ const emailsending = ({authAxios}) => {
         </Page>
     )
 
-    return ( subscription ==! null ? 
+    return ( subscription !== null ? 
       <Page
         title='BEST SELLER EMAIL SENDER'
         subtitle={subscription}
