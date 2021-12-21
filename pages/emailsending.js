@@ -114,8 +114,7 @@ const emailsending = ({authAxios}) => {
         subtitle={subscription}
         primaryAction={
           {
-            content: 'Cancel Subscription',
-            onAction: {handleCancelSubscription}
+            content: 'Cancel Subscription'
           }
         }
         >
@@ -123,6 +122,7 @@ const emailsending = ({authAxios}) => {
             <Card.Section> 
                 <div style={{color: '#008060'}}>
                 <Button monochrome outline fullWidth size="large" right onClick={handleEmailSending}>Send to all</Button>
+                <Button monochrome outline fullWidth size="large" right onClick={handleCancelSubscription}>Cancel</Button>
                 </div>
             </Card.Section>
             <Card.Section>
