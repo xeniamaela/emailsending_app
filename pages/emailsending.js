@@ -5,6 +5,7 @@ const emailsending = ({authAxios}) => {
   const [customers, setCustomers] = useState([])
   const [orders, setOrders] = useState([])
   const [subscription, setSubscription] = useState(null)
+  const [disable, setDisable] = useState(initialState)
 
   useEffect(() => {
     authAxios.get('/customers')
@@ -55,7 +56,7 @@ const emailsending = ({authAxios}) => {
 
   const row = customers.map(customer => {
     return [customer.id, customer.first_name, customer.last_name, customer.email,
-    <Button primary id={customer.email} onClick={()=> handleSpecificEmail(customer.email)}>Send</Button>]
+    <Button primary id={customer.email} onClick={()=> handleSpecificEmail(customer.email, disable)}>Send</Button>]
   })
 
   const email = row.map(e => {return(e[3])})
@@ -63,9 +64,11 @@ const emailsending = ({authAxios}) => {
   const handleSpecificEmail = async (customerEmail) => {
     // alert('Email sent!')
     // console.log(customerEmail)
+
     subscription[0].name === 'BASIC PLAN' ? authAxios.post('/subscription-pro')
     .then(res => {
       window.parent.location.href = res.data;
+      setDisable(true);
     }) :
     authAxios.post('/spamEmail', {
       email: customerEmail,
@@ -90,10 +93,6 @@ const emailsending = ({authAxios}) => {
     .catch(error => console.log(error))
 
     alert('Email sent to all!')
-  }
-
-  const handleSubscription = async () => {
-    
   }
 
     return (
