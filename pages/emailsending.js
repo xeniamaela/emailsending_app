@@ -1,5 +1,6 @@
 import { Card, Button, Page, DataTable} from "@shopify/polaris";
 import React, {useState, useEffect} from 'react';
+import Subscription from "./subscription";
 
 const emailsending = ({authAxios}) => {
   const [customers, setCustomers] = useState([])
@@ -139,7 +140,7 @@ const emailsending = ({authAxios}) => {
                 </div>
                 <br/>
                 <div style={{color: '#008060'}}>
-                <Button monochrome outline fullWidth size="large" onClick={handleSubscriptionChoices}>SUBSCRIPTION</Button>
+                <Button monochrome outline fullWidth size="large" onClick={() => {<Subscription/>}}>SUBSCRIPTION</Button>
                 </div>
             </Card.Section>
             <Card.Section>
