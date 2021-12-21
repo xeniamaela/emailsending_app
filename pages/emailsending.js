@@ -108,12 +108,12 @@ const emailsending = ({authAxios}) => {
         <Page
         title='BEST SELLER EMAIL SENDER'
         subtitle={subscription}
-        primaryAction={
+        secondaryActions={[
           {
             content: 'Cancel Subscription',
             onAction: () => {handleCancelSubscription}
           }
-        }
+        ]}
         >
             <Card>
             <Card.Section> 
