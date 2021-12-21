@@ -16,7 +16,7 @@ const Subscription = ({authAxios}) => {
     
         authAxios.get('/getAllSubscription')
         .then(result => {const subscription = result.data.body.recurring_application_charges; const length = result.data.body.recurring_application_charges.length;
-    
+            console.log(subscription)
           for(let i = 0; i < length; i++) {
             if (subscription[i].status !== 'active') {
               continue;
