@@ -121,8 +121,10 @@ const emailsending = ({authAxios}) => {
             <Card>
             <Card.Section> 
                 <div style={{color: '#008060'}}>
-                <Button monochrome outline fullWidth size="large" right onClick={handleEmailSending}>Send to all</Button>
-                <Button monochrome outline fullWidth size="large" right onClick={handleCancelSubscription}>Cancel</Button>
+                <Button monochrome outline fullWidth size="large" onClick={handleEmailSending}>Send to all</Button>
+                </div>
+                <div style={{color: '#008060'}}>
+                <Button monochrome outline fullWidth size="large" onClick={handleCancelSubscription}>Cancel</Button>
                 </div>
             </Card.Section>
             <Card.Section>
