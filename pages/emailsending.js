@@ -4,7 +4,8 @@ import React, {useState, useEffect} from 'react';
 const emailsending = ({authAxios}) => {
   const [customers, setCustomers] = useState([])
   const [orders, setOrders] = useState([])
-  const [subscription, setSubscription] = useState(null)
+  const [subscription, setSubscriptionName] = useState('')
+  const [subscriptionId, setSubscriptionId] = useState(null)
   const [btnDisable, setBtnDisable] = useState(true)
 
   useEffect(() => {
@@ -28,7 +29,8 @@ const emailsending = ({authAxios}) => {
         if (subscription[i].status !== 'active') {
           continue;
         } else {
-          setSubscription(subscription[i].name)
+          setSubscriptionName(subscription[i].name)
+          setSubscriptionId(subscription[i].id)
           break;
         }
       } 
@@ -98,13 +100,13 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleCancelSubscription = async () => {
-      alert('am clicked!')
+
       authAxios.delete('/cancelSubscription', {
-        id: subscription[0].id
+        id: subscriptionId
       })
       .then(res => {
         window.parent.location.href = res.data;
-        console.log('am clicked!')
+        alert('am clicked!')
       })
   }
 
@@ -112,17 +114,13 @@ const emailsending = ({authAxios}) => {
         <Page
         title='BEST SELLER EMAIL SENDER'
         subtitle={subscription}
-        primaryAction={
-          {
-            content: 'Cancel Subscription'
-          }
-        }
         >
             <Card>
             <Card.Section> 
                 <div style={{color: '#008060'}}>
                 <Button monochrome outline fullWidth size="large" onClick={handleEmailSending}>Send to all</Button>
                 </div>
+                <br/>
                 <div style={{color: '#008060'}}>
                 <Button monochrome outline fullWidth size="large" onClick={handleCancelSubscription}>Cancel</Button>
                 </div>
