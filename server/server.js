@@ -183,6 +183,16 @@ app.prepare().then(async () => {
     ctx.body = data;
   })
 
+  router.get('/cancelSubscription', verifyRequest(), async(ctx) => {
+    const session = await Shopify.Utils.loadCurrentSession(ctx.req, ctx.res);
+    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+    const data = await client.delete({
+      path: 'recurring_application_charges',
+    });
+
+    ctx.status = 200;
+    ctx.body = data;
+  })
   //end
 
   router.post("/webhooks", async (ctx) => {

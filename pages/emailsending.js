@@ -96,6 +96,14 @@ const emailsending = ({authAxios}) => {
     alert('Email sent to all!')
   }
 
+  const handleCancelSubscription = async () => {
+    if (subscription !== null) {
+      authAxios.delete('/cancelSubscription')
+      .then(res => alert(res, 'Subscription cancelled successfully!'))
+    }
+  }
+
+
     return (
         <Page
         title='BEST SELLER EMAIL SENDER'
@@ -103,7 +111,7 @@ const emailsending = ({authAxios}) => {
         primaryAction={
           {
             content: 'Cancel Subscription',
-            onAction: () => alert('Cancel Subscription')
+            onAction: () => {handleCancelSubscription}
           }
         }
         >
