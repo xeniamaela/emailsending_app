@@ -56,7 +56,7 @@ const emailsending = ({authAxios}) => {
 
   const row = customers.map(customer => {
     return [customer.id, customer.first_name, customer.last_name, customer.email,
-    <Button primary disable={btnDisable} id={customer.email} onClick={()=> handleSpecificEmail(customer.email)}>Send</Button>]
+    <Button primary disabled={btnDisable} id={customer.email} onClick={()=> handleSpecificEmail(customer.email)}>Send</Button>]
   })
 
   const email = row.map(e => {return(e[3])})
