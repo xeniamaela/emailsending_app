@@ -32,7 +32,7 @@ const Subscription = ({authAxios}) => {
         if (subscription === null)
         {
             authAxios.post('/subscription-basic')
-            .then(res => {window.parent.location.href = res.data;})
+            .then(res => {window.location.href = res.data;})
         }  
     }
 
