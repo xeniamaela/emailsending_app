@@ -6,7 +6,9 @@ const emailsending = ({authAxios}) => {
   const [orders, setOrders] = useState([])
   const [subscription, setSubscriptionName] = useState('')
   const [subscriptionId, setSubscriptionId] = useState(null)
-  const [btnDisable, setBtnDisable] = useState(true)
+  const [btnBasicDisable, setBtnBasicDisable] = useState(true);
+  const [btnProDisable, setBtnProDisable] = useState(true);
+
 
   useEffect(() => {
     authAxios.get('/customers')
@@ -59,7 +61,7 @@ const emailsending = ({authAxios}) => {
 
   const row = customers.map(customer => {
     return [customer.id, customer.first_name, customer.last_name, customer.email,
-    <Button primary disabled={btnDisable} id={customer.email} onClick={()=> handleSpecificEmail(customer.email)}>Send</Button>]
+    <Button primary disabled={btnBasicDisable} id={customer.email} onClick={()=> handleSpecificEmail(customer.email)}>Send</Button>]
   })
 
   const email = row.map(e => {return(e[3])})
@@ -88,17 +90,17 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleSubscriptionChoices = async () => {
-
+    subscriptionChoices
   }
 
   const handleBasicPlan = async () => {
       authAxios.post('/subscription-basic')
-      .then(res => {window.parent.location.href = res.data; setBtnDisable(true);})
+      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(true);})
   }
 
   const handleProPlan = async () => {
       authAxios.post('/subscription-pro')
-      .then(res => {window.parent.location.href = res.data; setBtnDisable(false);})
+      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(false);})
   }
 
     const subscriptionChoices = (
@@ -125,15 +127,15 @@ const emailsending = ({authAxios}) => {
         </Page>
     )
 
-    return subscription !== null ? subscriptionChoices : (
-        <Page
+    return ( subscription ==! null ? 
+      <Page
         title='BEST SELLER EMAIL SENDER'
         subtitle={subscription}
         >
             <Card>
             <Card.Section> 
                 <div style={{color: '#008060'}}>
-                <Button monochrome outline fullWidth size="large" onClick={handleEmailSending}>Send to all</Button>
+                <Button monochrome outline fullWidth size="large" disabled={btnProDisable} onClick={handleEmailSending}>Send to all</Button>
                 </div>
                 <br/>
                 <div style={{color: '#008060'}}>
@@ -148,7 +150,7 @@ const emailsending = ({authAxios}) => {
                 />
             </Card.Section>
             </Card>
-        </Page>
+        </Page> : subscriptionChoices
     )
 }
 
