@@ -89,9 +89,10 @@ const emailsending = ({authAxios}) => {
     .then(result => {console.log(result); })
     .catch(error => console.log(error))
 
+    alert('Email sent to customers!')
   }
 
-    return ( subscription !== null ? 
+    return (
       <Page
         title='BEST SELLER EMAIL SENDER'
         subtitle={subscription}
@@ -110,7 +111,7 @@ const emailsending = ({authAxios}) => {
                 />
             </Card.Section>
             </Card>
-        </Page> : subscriptionChoices
+        </Page>
     )
 }
 
