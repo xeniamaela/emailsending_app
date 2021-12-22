@@ -79,7 +79,7 @@ app.prepare().then(async () => {
     const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
     const data = await client.get({
       path: 'customers',
-      query: {limit:250} 
+      query: {limit:5} 
     });
 
 
@@ -93,7 +93,7 @@ app.prepare().then(async () => {
 
         const nextPage = await client.get({
           path: 'customers',
-          query: {page_info: newPageInfo, limit:250}
+          query: {page_info: newPageInfo, limit:5}
         })
         customers = [...customers, ...nextPage.body.customers]
         // console.log(nextPage.pageInfo.nextPage.query.page_info)
