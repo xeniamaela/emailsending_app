@@ -91,30 +91,6 @@ const emailsending = ({authAxios}) => {
 
   }
 
-    const subscriptionChoices = (
-        <Page
-        title="Choose the Right Plan For You"
-        subtitle="Find a plan that best matches the scale you need for your application."
-        divider
-        >
-            <Card title="FREE PLAN">
-                <Card.Section>
-                    <Button primary onClick={handleSubscriptionChoices}>Subscribe</Button>
-                </Card.Section>
-            </Card>
-            <Card title="BASIC PLAN">
-                <Card.Section>
-                    <Button primary onClick={handleBasicPlan}>Subscribe</Button>
-                </Card.Section>
-            </Card>
-            <Card title="PRO PLAN">
-                <Card.Section>
-                    <Button primary onClick={handleProPlan}>Subscribe</Button>
-                </Card.Section>
-            </Card>
-        </Page>
-    )
-
     return ( subscription !== null ? 
       <Page
         title='BEST SELLER EMAIL SENDER'
