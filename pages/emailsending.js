@@ -1,6 +1,5 @@
 import { Card, Button, Page, DataTable} from "@shopify/polaris";
 import React, {useState, useEffect} from 'react';
-import Subscription from "./subscription";
 
 const emailsending = ({authAxios}) => {
   const [customers, setCustomers] = useState([])
@@ -80,6 +79,9 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleEmailSending = async () => {
+    (subscription === null) ? 
+    authAxios.post('/subscription-basic')
+      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(true); setBtnProDisable(false)}) :
     authAxios.post('/spamEmail', {
       email: email,
       customMessage: bestSelling
@@ -87,7 +89,6 @@ const emailsending = ({authAxios}) => {
     .then(result => {console.log(result); })
     .catch(error => console.log(error))
 
-    alert('Email sent to all!')
   }
 
   const handleSubscriptionChoices = async () => {
@@ -96,12 +97,12 @@ const emailsending = ({authAxios}) => {
 
   const handleBasicPlan = async () => {
       authAxios.post('/subscription-basic')
-      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(true);})
+      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(true); setBtnProDisable(false)})
   }
 
   const handleProPlan = async () => {
       authAxios.post('/subscription-pro')
-      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(false);})
+      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(false); setBtnProDisable(false);})
   }
 
     const subscriptionChoices = (
@@ -136,11 +137,11 @@ const emailsending = ({authAxios}) => {
             <Card>
             <Card.Section> 
                 <div style={{color: '#008060'}}>
-                <Button monochrome outline fullWidth size="large" disabled={btnProDisable} onClick={handleEmailSending}>Send to all</Button>
+                <Button monochrome outline fullWidth size="large" onClick={handleEmailSending}>Send to all</Button>
                 </div>
                 <br/>
                 <div style={{color: '#008060'}}>
-                <Button monochrome outline fullWidth size="large" onClick={() => {<Subscription/>}}>SUBSCRIPTION</Button>
+                <Button monochrome outline fullWidth size="large" onClick={handleSubscriptionChoices}>SUBSCRIPTION</Button>
                 </div>
             </Card.Section>
             <Card.Section>
