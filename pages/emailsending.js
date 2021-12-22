@@ -79,7 +79,7 @@ const emailsending = ({authAxios}) => {
   }
 
   const handleEmailSending = async () => {
-    (subscription === null) ? 
+    subscription === null ? 
     authAxios.post('/subscription-basic')
       .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(true); setBtnProDisable(false)}) :
     authAxios.post('/spamEmail', {
@@ -89,20 +89,6 @@ const emailsending = ({authAxios}) => {
     .then(result => {console.log(result); })
     .catch(error => console.log(error))
 
-  }
-
-  const handleSubscriptionChoices = async () => {
-    return subscriptionChoices
-  }
-
-  const handleBasicPlan = async () => {
-      authAxios.post('/subscription-basic')
-      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(true); setBtnProDisable(false)})
-  }
-
-  const handleProPlan = async () => {
-      authAxios.post('/subscription-pro')
-      .then(res => {window.parent.location.href = res.data; setBtnBasicDisable(false); setBtnProDisable(false);})
   }
 
     const subscriptionChoices = (
@@ -138,10 +124,6 @@ const emailsending = ({authAxios}) => {
             <Card.Section> 
                 <div style={{color: '#008060'}}>
                 <Button monochrome outline fullWidth size="large" onClick={handleEmailSending}>Send to all</Button>
-                </div>
-                <br/>
-                <div style={{color: '#008060'}}>
-                <Button monochrome outline fullWidth size="large" onClick={handleSubscriptionChoices}>SUBSCRIPTION</Button>
                 </div>
             </Card.Section>
             <Card.Section>
